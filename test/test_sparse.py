@@ -1,6 +1,11 @@
+# -*- coding: utf-8 -*-
+
+from mathics.core.load_builtin import import_and_load_builtins
 from mathics.session import MathicsSession
 
-session = MathicsSession(add_builtin=True, catch_interrupt=False)
+import_and_load_builtins()
+
+session = MathicsSession(character_encoding="ASCII")
 
 
 def check_evaluation(str_expr: str, expected: str, message=""):
@@ -14,6 +19,6 @@ def check_evaluation(str_expr: str, expected: str, message=""):
         assert result == expected
 
 
-def test_hello():
-    session.evaluate('LoadModule["pymathics.hello"]') == "pymathics.hello"
-    check_evaluation('Hello["World"]', "Hello, World!")
+def test_build_sparse():
+    session.evaluate('LoadModule["pymathics.sparse"]') == "pymathics.sparse"
+    check_evaluation('A=SparseArray[{{1,2}->1},{2,2}]', "SparseArray[<1>, {2, 2}]")

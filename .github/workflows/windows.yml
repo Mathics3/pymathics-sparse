@@ -1,4 +1,4 @@
-name: pymathics-hello (Windows)
+name: pymathics-sparse (Windows)
 
 on:
   push:

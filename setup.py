@@ -11,12 +11,12 @@ if sys.version_info < (3, 6):
     sys.exit(-1)
 
 # stores __version__ in the current namespace
-exec(compile(open("pymathics/hello/version.py").read(), "version.py", "exec"))
+exec(compile(open("pymathics/sparse/version.py").read(), "version.py", "exec"))
 
 is_PyPy = platform.python_implementation() == "PyPy"
 
 setup(
-    name="pymathics-hello",
+    name="pymathics-sparse",
     maintainer="Mathics Group",
     maintainer_email="mathics-devel@googlegroups.com",
     version=__version__,  # noqa
