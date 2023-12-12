@@ -5,6 +5,7 @@ Sparse Array Functions
 """
 
 
+from mathics.builtin.tensor import get_dimensions
 from mathics.core.atoms import Integer, Integer0
 from mathics.core.builtin import Builtin
 from mathics.core.evaluation import Evaluation
@@ -18,6 +19,57 @@ from mathics.core.systemsymbols import (
     SymbolTable,
 )
 from mathics.eval.parts import walk_parts
+
+
+
+class SparseArrayExpression(Expression):
+    """
+    Specialized class to store SparseArray expressions
+
+    """
+
+    def __init__(self, rules, dims):
+        self.dims = (d.value for d in (dims))
+        self.rules = rules
+        # Elaborate...
+
+    def get_dimensions(self):
+        return self.dims
+        
+
+class Dimensions(Builtin):
+    """
+    <url>:WMA: https://reference.wolfram.com/language/ref/Dimensions.html</url>
+
+    <dl>
+    <dt>'Dimensions[$expr$]'
+        <dd>returns a list of the dimensions of the expression $expr$.
+    </dl>
+
+    A vector of length 3:
+    >> Dimensions[{a, b, c}]
+     = {3}
+
+    A 3x2 matrix:
+    >> Dimensions[{{a, b}, {c, d}, {e, f}}]
+     = {3, 2}
+
+    Ragged arrays are not taken into account:
+    >> Dimensions[{{a, b}, {b, c}, {c, d, e}}]
+     = {3}
+
+    The expression can have any head:
+    >> Dimensions[f[f[a, b, c]]]
+     = {1, 3}
+    """
+
+    summary_text = "the dimensions of a tensor"
+
+    def eval(self, expr, evaluation: Evaluation):
+        "Dimensions[expr_]"
+        if isinstance(expr, SparseArrayExpression):
+            return ListExpression(*[Integer(dim) for dim in expr.get_dimensions()]
+        return ListExpression(*[Integer(dim) for dim in get_dimensions(expr)])
 
 
 class SparseArray(Builtin):
