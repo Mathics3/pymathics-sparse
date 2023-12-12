@@ -11,7 +11,8 @@ session = MathicsSession(character_encoding="ASCII")
 def check_evaluation(str_expr: str, expected: str, message=""):
     """Helper function to test that a Mathics expression against
     its results"""
-    result = session.evaluate(str_expr).value
+    result = session.evaluate(f"ToString[{str_expr}]").value
+    print("result:", result)
 
     if message:
         assert result == expected, f"{message}: got: {result}"
@@ -21,4 +22,4 @@ def check_evaluation(str_expr: str, expected: str, message=""):
 
 def test_build_sparse():
     session.evaluate('LoadModule["pymathics.sparse"]') == "pymathics.sparse"
-    check_evaluation('A=SparseArray[{{1,2}->1},{2,2}]', "SparseArray[<1>, {2, 2}]")
+    check_evaluation('A=SparseArray[{{1,2}->1},{2,2}]', "SparseArray[<1>,{2,2}]")

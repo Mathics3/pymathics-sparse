@@ -5,8 +5,8 @@ Sparse Array Functions
 """
 
 
-from mathics.builtin.tensor import get_dimensions
-from mathics.core.atoms import Integer, Integer0
+from mathics.builtin.tensors import get_dimensions
+from mathics.core.atoms import Integer, Integer0, String
 from mathics.core.builtin import Builtin
 from mathics.core.evaluation import Evaluation
 from mathics.core.expression import Expression
@@ -21,6 +21,7 @@ from mathics.core.systemsymbols import (
 from mathics.eval.parts import walk_parts
 
 
+SymbolSparseArray = Symbol("Pymathics`SparseArray")
 
 class SparseArrayExpression(Expression):
     """
@@ -62,13 +63,17 @@ class Dimensions(Builtin):
     >> Dimensions[f[f[a, b, c]]]
      = {1, 3}
     """
-
-    summary_text = "the dimensions of a tensor"
+    # context = "System`"
+    summary_text = "customized  the dimensions of a tensor"
 
     def eval(self, expr, evaluation: Evaluation):
         "Dimensions[expr_]"
         if isinstance(expr, SparseArrayExpression):
-            return ListExpression(*[Integer(dim) for dim in expr.get_dimensions()]
+            return ListExpression(*[Integer(dim) for dim in expr.get_dimensions()])
+        if expr.has_form("Pymathics`SparseArray",4):
+            dims_expr = expr.elements[1]
+            return dims_expr
+            
         return ListExpression(*[Integer(dim) for dim in get_dimensions(expr)])
 
 
@@ -99,13 +104,13 @@ class SparseArray(Builtin):
      = {{0, a}, {b, 0}}
 
     """
-
+    # context = "System`"
     messages = {
         "list": "List expected at position 1 in SparseArray[``1``]",
         "rect": "Rectangular array or list of rules is expected at position 1 in SparseArray[``1``]",
         "exdims": "The dimensions cannot be determined from the positions `1`",
     }
-    summary_text = "an array by the values of the non-zero elements"
+    summary_text = "customized an array by the values of the non-zero elements"
 
     def list_to_sparse(self, array, evaluation: Evaluation):
         # TODO: Simplify and modularize this method.
@@ -211,7 +216,6 @@ class SparseArray(Builtin):
         if not (rules.has_form("List", None) and len(rules.elements) > 0):
             if rules is Symbol("Automatic"):
                 return
-            print(rules.has_form("List", (1,)))
             evaluation.message("SparseArray", "list", rules)
             return
 
@@ -238,3 +242,9 @@ class SparseArray(Builtin):
     ):
         """SparseArray[rules_List, dims_List, default_]"""
         return Expression(SymbolSparseArray, SymbolAutomatic, dims, default, rules)
+
+    def format_internal_repr(
+        self, rules, dims, default, evaluation: Evaluation
+    ):
+        """Pymathics`SparseArray[_Symbol, dims_List, default_,  rules_List]"""
+        return String(f"SparseArray[<{len(rules.elements)}>,{dims}]")

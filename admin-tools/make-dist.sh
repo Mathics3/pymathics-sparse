@@ -1,5 +1,5 @@
 #!/bin/bash
-PACKAGE=pymathics-hello
+PACKAGE=pymathics-sparse
 
 # FIXME put some of the below in a common routine
 function finish {
@@ -16,7 +16,7 @@ fi
 
 
 cd ..
-source pymathics/hello/version.py
+source pymathics/sparse/version.py
 echo $__version__
 
 for pyversion in $PYVERSIONS; do

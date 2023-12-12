@@ -30,8 +30,8 @@ Once loaded, we can use it to define and operate over SparseArray expressions:
  
 """
 
-from pymathics.hello.version import __version__
-from pymathics.hello.__main__ import SparseArray, Dimensions  # noqa
+from pymathics.sparse.version import __version__
+from pymathics.sparse.__main__ import SparseArray, Dimensions  # noqa
 
 __all__ = ("__version__", "SparseArray", "Dimensions", "pymathics_version_data")
 
