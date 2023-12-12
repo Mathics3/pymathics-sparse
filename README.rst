@@ -1,11 +1,6 @@
-Test PyMathics module
+SparseArray PyMathics module
 
-This is a Python module for Mathics that is an simple "Hello, World" example
-that is typically used as a minimal example for demonstration.
-
-You can also use this as a template to clone if you want to create your own Pymathics module.
-
-Here we are demonstrating how to write a PyMathics module.
+This is a Python module for Mathics that provides some basic support for `SparseArray` expressions.
 
 To install in development mode (run code from the source tree):
 
@@ -20,11 +15,20 @@ After installing inside Mathics you can load this using the
 Then the function ```Hello[]`` is available::
 
       $ mathicsscript
-      In[1]:= LoadModule["pymathics.hello"]
-      Out[1]= pymathics.hello
+      In[1]:= LoadModule["pymathics.sparsearray"]
+      Out[1]= pymathics.sparsearray
 
-      In[2]:= Hello["World"]
-      Out[2]:= Hello, World!
+      In[2]:= A = SparseArray[{{1,2}->1},{2,2}]
+      Out[2]:= SparseArray[<1>, {2,2}]
+      In[3]:= A // Normal
+      Out[3]:= {{0, 1}, {0, 0}}
+      In[3]:= A.Transpose[A]
+      Out[3]:= SparseArray[<1>, {2,2}]
+      In[4]:= A.Transpose[A]
+      Out[4]:= SparseArray[<1>, {2,2}]
+      In[5]:= %//Normal
+      Out[5]:= {{1, 0}, {0, 0}}
+
 
 You can test with ``py.test``::
 
